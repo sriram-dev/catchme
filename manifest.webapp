@@ -1,0 +1,8 @@
+{
+    "name": "Race",
+    "launch_path" : "./index.html",
+    "version": "1",
+    "developer": {
+        "name": "sriram"
+    }
+}
