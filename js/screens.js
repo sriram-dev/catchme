@@ -5,15 +5,15 @@ var LoadingScreen =  me.ScreenObject.extend(
 		console.log("inside init of loading screen \n");
 		this.parent(true);
         this.bg = new Image();
-        this.bg.src = "data/img/sky.jpg";
-        this.loading = new me.Font("Verdana", 20, "white");
+        this.bg.src = "data/img/loading.png";
+        this.loading = new me.Font("Verdana", 20, "black");
 	},
 	
 	/* draw function */
 	draw: function(context) {
 		me.video.clearSurface(context, "black");
         context.drawImage(this.bg, 0, 0);
-		var loadingText = "Loading ...";
+		var loadingText = "Loading Game ... Please Wait!";
         var loadingSize = this.loading.measureText(context, loadingText);
 		this.loading.draw(context, loadingText,
                         (me.video.getWidth() / 2) - (loadingSize.width / 2),
@@ -56,7 +56,7 @@ var PlayScreen = me.ScreenObject.extend({
         me.game.add(new PlayerEntity(10, 30), 10);
 		// add bkgrd 
 		me.game.add(new BackgroundObject(), 1);
-		
+		me.debug.renderHitBox = true;
 		//randomly add 5 coins at different locations in screen
 		me.game.add(new CoinUpdater(), 1);	 	
 
@@ -82,14 +82,14 @@ var GameOverScreen = me.ScreenObject.extend({
 		this.parent(true);
         this.bg = new Image();
         this.bg.src = "data/img/menu.jpg";
-        this.loading = new me.Font("Verdana", 20, "white");
+        this.loading = new me.Font("Verdana", 20, "black");
 	},
 	
 	draw: function(context) {
 		 // draw play button
 		 this.loadingtext = "Game Over";
          context.drawImage(this.bg, 0, 0);
-         this.play.draw(context);
+         this.play.draw(context,this.loadingtext);
 	},
 	/*
      * reset function
@@ -100,7 +100,7 @@ var GameOverScreen = me.ScreenObject.extend({
         this.play = new Button("menu", me.state.PLAY, 200);
 
         // version
-        this.version = new me.Font("Verdana", 20, "white");
+        this.version = new me.Font("Verdana", 20, "black");
     },
     onDestroyEvent: function() {
     	game.data.score = 0;

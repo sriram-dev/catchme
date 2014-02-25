@@ -54,14 +54,16 @@ var Button = me.Rect.extend(
 
 /* Main Player */
 var PlayerEntity = me.ObjectEntity.extend({
-	init:function(x,y) {
+	init:function(x,y) {                
 		var settings = {};
         settings.image = me.loader.getImage("fly");
-        settings.spritewidth = 50;
-        //settings.spriteheight = 200;
+        settings.spritewidth = 85.33;
+        settings.spriteheight = 60;
 		this.parent(x,y,settings);
 		// set the default horizontal & vertical speed (accel vector)
-        this.setVelocity(3, 3);
+        this.setVelocity(5, 5);
+        // to reduce the bounding box
+        //this.updateColRect(8, 50, -1, 0);
         this.anchorPoint.set(0.0, 0.0);
 
         // init variables
@@ -89,12 +91,14 @@ var PlayerEntity = me.ObjectEntity.extend({
 		}
 		
 		if(me.input.isKeyPressed("left")) {
+            this.flipX(true);
 			this.vel.x -= this.accel.x * me.timer.tick;
 			if(this.pos.x < 0)
 				this.pos.x = 0;
 		}
 		
 		if(me.input.isKeyPressed("right")) {
+            this.flipX(false);
 			this.vel.x += this.accel.x * me.timer.tick;
 			if(this.pos.x >   (me.video.getWidth() - this.renderable.width))
 				this.pos.x =  me.video.getWidth() - this.renderable.width;
@@ -105,6 +109,9 @@ var PlayerEntity = me.ObjectEntity.extend({
         this.checkCollision();
 		// return true if something is updated so that engine knows
 		var updated = (this.vel.x != 0 || this.vel.y != 0);
+        if(updated) {
+            this.parent();
+        }
         return updated;
 	},
 	
@@ -216,7 +223,7 @@ var CoinEntity  = me.ObjectEntity.extend({
         this.parent(x,y,settings);
 
         // set velocity
-        this.setVelocity(-1,0);
+        this.setVelocity(-7,0);
         this.anchorPoint.set(0.0, 0.0);
 
         this.gracity = 0;
@@ -244,27 +251,24 @@ var CoinEntity  = me.ObjectEntity.extend({
 var CoinUpdater = Object.extend({
     init: function() {
         this.fps = 0;
-        console.log("inside init of coin updater");
         this.alwaysUpdate = true;
     },
 
     update: function() {
-        if ((this.fps++) % 120 == 0)
+        if ((this.fps++) % 90 == 0)
         {
             var width = me.video.getWidth();
             var height = me.video.getHeight();
-            var newy = Math.random() * (height -50);
-            var newx = Math.random() * (width - 50);
-            me.game.add(new CoinEntity(newx,newy),10);   
+            var newy = Math.random() * ((height - 30));
+            var newx = Math.random() * ((width/2)) +  width/2;
+            me.game.add(new CoinEntity(newx,newy),10);
         }
         me.game.sort();
     }
 });
 
 var DisplayScoreEntity = me.Renderable.extend({
-    init: function(x, y) {
-        console.log("in init of HUD scoreitem");
-         
+    init: function(x, y) {         
         // call the parent constructor 
         // (size does not matter here)
         this.parent(new me.Vector2d(x, y), 10, 10); 
