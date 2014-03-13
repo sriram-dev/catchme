@@ -79,18 +79,21 @@ var PlayerEntity = me.ObjectEntity.extend({
         this.vel.y = 0;
 		// move pos acc to key press 
 		if(me.input.isKeyPressed("up")) {
+            this.collectData(this.pos.x, this.pos.y, 0);
             this.vel.y -= this.accel.y * me.timer.tick;
 			if(this.pos.y < 0)
 				this.pos.y = 0;
             //console.log("pos.y" + this.pos.y);
 		}
 		if(me.input.isKeyPressed("down")) {
+            this.collectData(this.pos.x, this.pos.y, 1);
 			this.vel.y += this.accel.y * me.timer.tick;			
 			if(this.pos.y >   (me.video.getHeight() - this.renderable.height))
 				this.pos.y =  me.video.getHeight() - this.renderable.height;
 		}
 		
 		if(me.input.isKeyPressed("left")) {
+            this.collectData(this.pos.x, this.pos.y, 2);
             this.flipX(true);
 			this.vel.x -= this.accel.x * me.timer.tick;
 			if(this.pos.x < 0)
@@ -98,12 +101,15 @@ var PlayerEntity = me.ObjectEntity.extend({
 		}
 		
 		if(me.input.isKeyPressed("right")) {
+            this.collectData(this.pos.x, this.pos.y, 3);
             this.flipX(false);
 			this.vel.x += this.accel.x * me.timer.tick;
 			if(this.pos.x >   (me.video.getWidth() - this.renderable.width))
 				this.pos.x =  me.video.getWidth() - this.renderable.width;
 		}
-		
+		// temp code start
+        
+        //temp code end
 		this.computeVelocity(this.vel);
         this.pos.add(this.vel);
         this.checkCollision();
@@ -122,7 +128,58 @@ var PlayerEntity = me.ObjectEntity.extend({
             game.data.score += 10;
             me.game.remove(res);
         }
-	}	
+	},
+
+    collectData: function(x,y, dir) {
+        //get the coin positions in screen divided 5x5
+        console.log(me.video.getPos());
+        var width = me.video.getPos().width;
+        var height = me.video.getPos().height;
+        var arr = [];        
+        var validSet = [];
+
+        //get all coin objects
+        var collectibles = me.game.getEntityByProp("type", me.game.COLLECTABLE_OBJECT);
+      
+        //from all the objects, get the current set to iterate on 
+        // since most collectibles would be no longer be on screen
+        // and we dont care abt them
+        for(var item = 0;item < collectibles.length; item++) {
+            if(collectibles[item].pos.x > 0) {
+                validSet.push(collectibles[item]);
+            }
+        }
+
+        console.log("Valid set length : " + validSet.length);
+        
+        for(var i=0;i<5;i++) {
+            for(var j=0; j < 5;j++) {
+                var fromx = i * width/5;
+                var tox = (i+1) * width/5;
+                var fromy = j * height/5;
+                var toy = (j+1) * height/5;
+                var foundCollectible = false;
+                //console.log("Fromx : " + fromx + "tox: " + tox + " fromy: " + fromy + " toy: " + toy);
+                //iterate all coin objects
+                for(var item = 0;item < validSet.length; item++) {
+                    if(validSet[item].pos.x >= fromx && validSet[item].pos.x <= tox && 
+                        validSet[item].pos.y >= fromy && validSet[item].pos.y <= toy) {
+                        foundCollectible = true;
+                        break;
+                    }
+                }
+                if(foundCollectible) {
+                    arr.push(1);
+                } else {
+                    arr.push(0);
+                }
+                //chk for player pos
+                if(x >= fromx && x <= tox && y >= fromy && y <= toy) {
+                    arr[arr.length-1] += 2;
+                }
+            }
+        }
+    }
 });
 
 
@@ -189,7 +246,6 @@ var BackgroundObject = Object.extend(
 var StripeEntity = me.ObjectEntity.extend({
 	init:function(x,y) {
 		var settings = {};
-		console.log("inside init ");
         //settings.image = me.loader.getImage("mid");
 		settings.spritewidth = 121;
         settings.spriteheight = 110;
@@ -215,7 +271,6 @@ var StripeEntity = me.ObjectEntity.extend({
 var CoinEntity  = me.ObjectEntity.extend({
     init: function(x,y) {
         var settings = {};
-        console.log("inside init of coin");
         settings.image = me.loader.getImage("coin");
         settings.spritewidth = 45;
         settings.spriteheight = 45;
@@ -255,11 +310,11 @@ var CoinUpdater = Object.extend({
     },
 
     update: function() {
-        if ((this.fps++) % 90 == 0)
+        if ((this.fps++) % 30 == 0)
         {
             var width = me.video.getWidth();
             var height = me.video.getHeight();
-            var newy = Math.random() * ((height - 30));
+            var newy = Math.random() * ((height - 10));
             var newx = Math.random() * ((width/2)) +  width/2;
             me.game.add(new CoinEntity(newx,newy),10);
         }

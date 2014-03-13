@@ -7,7 +7,8 @@ var game = {
     data : {
         // score
         score : 0,
-        clock :10
+        clock :60,
+        nndata: {}
     },
      
     // Run on page load.

@@ -26,15 +26,18 @@ var MenuScreen = me.ScreenObject.extend({
 	init:function() {
 		this.parent(true);
         this.bg = new Image();
-        this.bg.src = "data/img/menu.jpg";
+        this.bg.src = "data/img/sky.jpg";
+        this.play = null;
+        this.highscores = null;
         this.loading = new me.Font("Verdana", 20, "white");
 	},
 	
 	draw: function(context) {
 		 // draw play button
-		 this.loadingtext = "Play";
+		 this.loadingtext = "";
          context.drawImage(this.bg, 0, 0);
          this.play.draw(context);
+         this.highscores.draw(context);
 	},
 	/*
      * reset function
@@ -42,8 +45,8 @@ var MenuScreen = me.ScreenObject.extend({
     onResetEvent: function()
     {
         // play button
-        this.play = new Button("menu", me.state.PLAY, 200);
-
+        this.play = new Button("highscores", me.state.PLAY, 280);
+        this.highscores = new Button("highscores", me.state.PLAY, 400);
         // version
         this.version = new me.Font("Verdana", 20, "white");
     }
