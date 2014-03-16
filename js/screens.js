@@ -37,7 +37,7 @@ var MenuScreen = me.ScreenObject.extend({
 		 this.loadingtext = "";
          context.drawImage(this.bg, 0, 0);
          this.play.draw(context);
-         this.highscores.draw(context);
+         //this.highscores.draw(context);
 	},
 	/*
      * reset function
@@ -45,8 +45,8 @@ var MenuScreen = me.ScreenObject.extend({
     onResetEvent: function()
     {
         // play button
-        this.play = new Button("highscores", me.state.PLAY, 280);
-        this.highscores = new Button("highscores", me.state.PLAY, 400);
+        this.play = new Button("play", me.state.PLAY, 280);
+        //this.highscores = new Button("highscores", me.state.PLAY, 400);
         // version
         this.version = new me.Font("Verdana", 20, "white");
     }
@@ -75,7 +75,7 @@ var PlayScreen = me.ScreenObject.extend({
 	 
 	 onDestroyEvent:function() {
 		clearInterval(this.interval);
-		game.data.clock = 10;		
+		game.data.clock = 60;		
 		me.game.world.removeChild(this.Clock);
 	 }	
 });

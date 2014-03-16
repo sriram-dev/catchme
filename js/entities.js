@@ -132,11 +132,13 @@ var PlayerEntity = me.ObjectEntity.extend({
 
     collectData: function(x,y, dir) {
         //get the coin positions in screen divided 5x5
-        console.log(me.video.getPos());
+        //console.log(me.video.getPos());
         var width = me.video.getPos().width;
         var height = me.video.getPos().height;
         var arr = [];        
         var validSet = [];
+        var data = {};
+        var outarr = [dir];
 
         //get all coin objects
         var collectibles = me.game.getEntityByProp("type", me.game.COLLECTABLE_OBJECT);
@@ -150,7 +152,7 @@ var PlayerEntity = me.ObjectEntity.extend({
             }
         }
 
-        console.log("Valid set length : " + validSet.length);
+        //console.log("Valid set length : " + validSet.length);
         
         for(var i=0;i<5;i++) {
             for(var j=0; j < 5;j++) {
@@ -175,10 +177,16 @@ var PlayerEntity = me.ObjectEntity.extend({
                 }
                 //chk for player pos
                 if(x >= fromx && x <= tox && y >= fromy && y <= toy) {
-                    arr[arr.length-1] += 2;
+                    arr[arr.length-1] = 2;
                 }
             }
         }
+        data.input = arr;
+        data.output = outarr;
+        if(arr.length > 1)
+            game.data.nndata.push(data);
+        console.log("nndata size: " + game.data.nndata.length);
+        //console.log(game.data.nndata);
     }
 });
 

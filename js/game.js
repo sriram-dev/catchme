@@ -7,8 +7,8 @@ var game = {
     data : {
         // score
         score : 0,
-        clock :60,
-        nndata: {}
+        clock :70,
+        nndata: []
     },
      
     // Run on page load.
@@ -143,6 +143,8 @@ game.HUD.ScoreItem = me.Renderable.extend({
         } else {            
             this.score = game.data.clock;
             if(this.score == 0) {
+                var net = new brain.NeuralNetwork({learningRate: 0.3});
+                console.log(net.train(game.data.nndata, {log:true, errorThresh:0.02, logPeriod:100, iterations:20000}));
                 me.state.change(me.state.GAMEOVER);
             }
             return true;
