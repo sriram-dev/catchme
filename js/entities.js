@@ -6,13 +6,14 @@ var Button = me.Rect.extend(
         /*
          * constructor
          */
-        init: function(image, action, y)
+        init: function(image, action, automode,  y)
         {
                 // init stuff
                 this.image = me.loader.getImage(image);
                 this.action = action;
-                this.pos = new me.Vector2d((me.video.getWidth() / 2 - this.image.width / 2), me.video.getHeight()/4);
-                console.log("height:" + me.video.getHeight());
+                this.automode = automode;
+                this.pos = new me.Vector2d((me.video.getWidth() / 2 - this.image.width / 2), y);
+                console.log("pos" + this.pos + "width : " + this.image.width + "height " + this.image.height);
 
                 // call parent constructor
                 this.parent(this.pos, this.image.width, this.image.height);
@@ -26,6 +27,12 @@ var Button = me.Rect.extend(
          */
         clicked: function()
         {
+                game.data.automode = this.automode;
+                if(game.data.automode) {
+                    console.log("Autoplay clicked");
+                } else {
+                    console.log("Play clicked");
+                }
                 // start action
                 me.state.change(this.action);
         },
@@ -72,41 +79,53 @@ var PlayerEntity = me.ObjectEntity.extend({
 
         // enable collision
         this.collidable = true;
+        var net = new brain.NeuralNetwork();
+        if(game.data.automode == true) {
+            //console.log(JSON.parse(game.data.nntoLoad));
+            //net.fromJSON(game.data.nntoLoad);
+            //var run = net.toFunction();
+        }
 	},
 	
 	update:function() {
 		this.vel.x = 0;
         this.vel.y = 0;
+        if(game.data.automode == false) {
 		// move pos acc to key press 
-		if(me.input.isKeyPressed("up")) {
-            this.collectData(this.pos.x, this.pos.y, 0);
-            this.vel.y -= this.accel.y * me.timer.tick;
-			if(this.pos.y < 0)
-				this.pos.y = 0;
-            //console.log("pos.y" + this.pos.y);
-		}
-		if(me.input.isKeyPressed("down")) {
-            this.collectData(this.pos.x, this.pos.y, 1);
-			this.vel.y += this.accel.y * me.timer.tick;			
-			if(this.pos.y >   (me.video.getHeight() - this.renderable.height))
-				this.pos.y =  me.video.getHeight() - this.renderable.height;
-		}
-		
-		if(me.input.isKeyPressed("left")) {
-            this.collectData(this.pos.x, this.pos.y, 2);
-            this.flipX(true);
-			this.vel.x -= this.accel.x * me.timer.tick;
-			if(this.pos.x < 0)
-				this.pos.x = 0;
-		}
-		
-		if(me.input.isKeyPressed("right")) {
-            this.collectData(this.pos.x, this.pos.y, 3);
-            this.flipX(false);
-			this.vel.x += this.accel.x * me.timer.tick;
-			if(this.pos.x >   (me.video.getWidth() - this.renderable.width))
-				this.pos.x =  me.video.getWidth() - this.renderable.width;
-		}
+    		if(me.input.isKeyPressed("up")) {
+                this.collectData(this.pos.x, this.pos.y, 0, 1);
+                this.vel.y -= this.accel.y * me.timer.tick;
+    			if(this.pos.y < 0)
+    				this.pos.y = 0;
+                //console.log("pos.y" + this.pos.y);
+    		}
+    		if(me.input.isKeyPressed("down")) {
+                this.collectData(this.pos.x, this.pos.y, 1, 1);
+    			this.vel.y += this.accel.y * me.timer.tick;			
+    			if(this.pos.y >   (me.video.getHeight() - this.renderable.height))
+    				this.pos.y =  me.video.getHeight() - this.renderable.height;
+    		}
+    		
+    		if(me.input.isKeyPressed("left")) {
+                this.collectData(this.pos.x, this.pos.y, 2, 1);
+                this.flipX(true);
+    			this.vel.x -= this.accel.x * me.timer.tick;
+    			if(this.pos.x < 0)
+    				this.pos.x = 0;
+    		}
+    		
+    		if(me.input.isKeyPressed("right")) {
+                this.collectData(this.pos.x, this.pos.y, 3, 1);
+                this.flipX(false);
+    			this.vel.x += this.accel.x * me.timer.tick;
+    			if(this.pos.x >   (me.video.getWidth() - this.renderable.width))
+    				this.pos.x =  me.video.getWidth() - this.renderable.width;
+    		}
+        } else {
+            var curData = this.collectData(this.pos.x, this.pos.y, 0, 2);
+            console.log(curData);
+            console.log(run(curData));
+        }
 		// temp code start
         
         //temp code end
@@ -130,7 +149,7 @@ var PlayerEntity = me.ObjectEntity.extend({
         }
 	},
 
-    collectData: function(x,y, dir) {
+    collectData: function(x,y, dir, type) {
         //get the coin positions in screen divided 5x5
         //console.log(me.video.getPos());
         var width = me.video.getPos().width;
@@ -182,6 +201,8 @@ var PlayerEntity = me.ObjectEntity.extend({
             }
         }
         data.input = arr;
+        if(type == 2)
+            return data.input;        
         data.output = outarr;
         if(arr.length > 1)
             game.data.nndata.push(data);

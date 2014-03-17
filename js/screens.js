@@ -37,6 +37,7 @@ var MenuScreen = me.ScreenObject.extend({
 		 this.loadingtext = "";
          context.drawImage(this.bg, 0, 0);
          this.play.draw(context);
+         this.autoplay.draw(context);
          //this.highscores.draw(context);
 	},
 	/*
@@ -45,7 +46,8 @@ var MenuScreen = me.ScreenObject.extend({
     onResetEvent: function()
     {
         // play button
-        this.play = new Button("play", me.state.PLAY, 280);
+        this.play = new Button("play", me.state.PLAY, false, 80);
+        this.autoplay = new Button("autoplay", me.state.PLAY, true, 200);
         //this.highscores = new Button("highscores", me.state.PLAY, 400);
         // version
         this.version = new me.Font("Verdana", 20, "white");
@@ -100,7 +102,7 @@ var GameOverScreen = me.ScreenObject.extend({
     onResetEvent: function()
     {
         // play button
-        this.play = new Button("menu", me.state.PLAY, 200);
+        this.play = new Button("menu", me.state.PLAY, false, 200);
 
         // version
         this.version = new me.Font("Verdana", 20, "black");

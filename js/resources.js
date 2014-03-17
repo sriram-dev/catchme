@@ -10,6 +10,7 @@ game.resources = [
 	{name: "menu", type:"image", src: "data/img/menu.jpg"},
 	{name: "coin", type:"image", src:"data/img/coin.jpg"},
 	{name: "32x32_font", type:"image", src:"data/img/32x32_font.png"},
-	{name: "play", type:"image", src:"data/img/playbutton.jpg"}
+	{name: "play", type:"image", src:"data/img/playbutton.jpg"},
+	{name: "autoplay", type:"image", src:"data/img/autoplay.jpg"}
 ];
 

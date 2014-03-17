@@ -7,6 +7,56 @@
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<script type="text/javascript" src="http://cloud.github.com/downloads/harthur/brain/brain-0.6.0.js"></script>
+		<script type="text/javascript">
+			window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;			
+			var nnData, filesystem;
+			function onInitFs(fs) {
+				  console.log("in init fs");
+				  filesystem = fs;
+			}
+
+			function WriteToFile(filesystem, filename, data) {
+				filesystem.root.getFile(filename, {create: true}, function(fileEntry) {
+					console.log("in WriteToFile");
+
+				    // Create a FileWriter object for our FileEntry (log.txt).
+				    fileEntry.createWriter(function(fileWriter) {
+
+				      fileWriter.onwriteend = function(e) {
+				        console.log('Write completed.');
+				      };
+
+				      fileWriter.onerror = function(e) {
+				        console.log('Write failed: ' + e.toString());
+				      };
+
+				      // Create a new Blob and write it to log.txt.
+				      //var blob = new Blob(['Lorem Ipsum'], {type: 'text/plain'});
+
+				      fileWriter.write(data);
+
+				    });
+
+				  }, function(e) {console.log(e)});
+			}
+
+			function ReadFromFile(filesystem, filename) {
+				console.log("In ReadFromFile");
+				filesystem.root.getFile(filename, {},  function(fileEntry) {
+					fileEntry.file(function(file) {
+				       var reader = new FileReader();
+
+				       reader.onloadend = function(e) {
+				         nnData = this.result;
+				         console.log(nnData);
+				       };
+
+				       reader.readAsText(file);
+				    });
+				});
+			}			
+			
+		</script>		
 	</head>
 	<body>
 		<!-- Canvas placeholder -->
