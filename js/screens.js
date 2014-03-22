@@ -65,14 +65,19 @@ var PlayScreen = me.ScreenObject.extend({
 		//randomly add 5 coins at different locations in screen
 		me.game.add(new CoinUpdater(), 1);	 	
 
-		this.HUD = new game.HUD.Container(370,250, false);
+		this.HUD = new game.HUD.Container(370,250, 1);
 		me.game.world.addChild(this.HUD);
 
-		this.Clock = new game.HUD.Container(370,20,true);
+		this.Clock = new game.HUD.Container(370,20,2);
 		me.game.world.addChild(this.Clock);
+
+		this.lives = new game.HUD.Container(100, 20, 3);
+		me.game.world.addChild(this.lives);
 		this.interval = setInterval(function() {game.data.clock -= 1;},1000);
+		this.font = new me.BitmapFont("32x32_font", 32);
 		// sort
 		me.game.sort();
+
 	 },
 	 
 	 onDestroyEvent:function() {
@@ -80,6 +85,7 @@ var PlayScreen = me.ScreenObject.extend({
 		game.data.clock = 60;		
 		me.game.world.removeChild(this.Clock);
 	 }	
+
 });
 
 var GameOverScreen = me.ScreenObject.extend({

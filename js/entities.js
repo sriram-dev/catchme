@@ -68,7 +68,7 @@ var PlayerEntity = me.ObjectEntity.extend({
         settings.spriteheight = 60;
 		this.parent(x,y,settings);
 		// set the default horizontal & vertical speed (accel vector)
-        this.setVelocity(5, 5);
+        this.setVelocity(6, 6);
         // to reduce the bounding box
         //this.updateColRect(8, 50, -1, 0);
         this.anchorPoint.set(0.0, 0.0);
@@ -323,13 +323,15 @@ var CoinEntity  = me.ObjectEntity.extend({
 
         // if the enemy object goes out from the screen,
         // remove it from the game manager
-        if (!this.visible)
+        
+        if(this.pos.x < 0) {
+            game.data.lives--;
             me.game.remove(this);
+        }
         this.computeVelocity(this.vel);
                 this.pos.add(this.vel);
         return true;
     }
-
 });
 
 var CoinUpdater = Object.extend({
@@ -368,6 +370,21 @@ var DisplayScoreEntity = me.Renderable.extend({
     draw : function (context) {
         //console.log("drawing score");
         this.font.draw (context, game.data.score, this.pos.x, this.pos.y);        
+    }
+});
+
+var DisplayLifeEntity = me.Renderable.extend({
+    init: function(x,y) {
+        this.parent(new me.Vector2d(x, y), 10, 10);
+
+        this.font = new me.BitmapFont("32x32_font", 32);
+        this.font.set("right"); 
+
+        this.floating = true;
+    },
+
+    draw: function(context) {
+        this.font.draw(context, game.data.lives, this.pos.x, this.pos.y);
     }
 });
 
