@@ -37,7 +37,7 @@ var MenuScreen = me.ScreenObject.extend({
 		 this.loadingtext = "";
          context.drawImage(this.bg, 0, 0);
          this.play.draw(context);
-         this.autoplay.draw(context);
+         //this.autoplay.draw(context);
          //this.highscores.draw(context);
 	},
 	/*
@@ -54,11 +54,17 @@ var MenuScreen = me.ScreenObject.extend({
     }
 });
 
-var PlayScreen = me.ScreenObject.extend({
+var PlayScreen = me.ScreenObject.extend({	 
 	 onResetEvent: function()
      {
 		// add main player
         me.game.add(new PlayerEntity(10, 30), 10);
+        console.log("in play screen ");
+        if(game.data.automode) {
+        	console.log("automode true");
+        } else {
+        	console.log("automode false");
+        }
 		// add bkgrd 
 		me.game.add(new BackgroundObject(), 1);
 		me.debug.renderHitBox = true;
@@ -82,7 +88,8 @@ var PlayScreen = me.ScreenObject.extend({
 	 
 	 onDestroyEvent:function() {
 		clearInterval(this.interval);
-		game.data.clock = 60;		
+		game.data.clock = 60;
+		game.data.lives = 5;
 		me.game.world.removeChild(this.Clock);
 	 }	
 
@@ -108,7 +115,7 @@ var GameOverScreen = me.ScreenObject.extend({
     onResetEvent: function()
     {
         // play button
-        this.play = new Button("menu", me.state.PLAY, false, 200);
+        this.play = new Button("menu", me.state.PLAY, false, 80);
 
         // version
         this.version = new me.Font("Verdana", 20, "black");

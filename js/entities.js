@@ -12,6 +12,10 @@ var Button = me.Rect.extend(
                 this.image = me.loader.getImage(image);
                 this.action = action;
                 this.automode = automode;
+                if(automode)
+                    console.log("automode true in button");
+                else
+                    console.log("automode false in button");
                 this.pos = new me.Vector2d((me.video.getWidth() / 2 - this.image.width / 2), y);
                 console.log("pos" + this.pos + "width : " + this.image.width + "height " + this.image.height);
 
@@ -28,7 +32,7 @@ var Button = me.Rect.extend(
         clicked: function()
         {
                 game.data.automode = this.automode;
-                if(game.data.automode) {
+                if(this.automode) {
                     console.log("Autoplay clicked");
                 } else {
                     console.log("Play clicked");
@@ -123,8 +127,8 @@ var PlayerEntity = me.ObjectEntity.extend({
     		}
         } else {
             var curData = this.collectData(this.pos.x, this.pos.y, 0, 2);
-            console.log(curData);
-            console.log(run(curData));
+            //console.log(curData);
+            //console.log(run(curData));
         }
 		// temp code start
         
@@ -301,8 +305,8 @@ var CoinEntity  = me.ObjectEntity.extend({
     init: function(x,y) {
         var settings = {};
         settings.image = me.loader.getImage("coin");
-        settings.spritewidth = 45;
-        settings.spriteheight = 45;
+        settings.spritewidth = 15;
+        settings.spriteheight = 30;
         settings.type = me.game.COLLECTABLE_OBJECT;       
         this.parent(x,y,settings);
 

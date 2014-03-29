@@ -146,7 +146,7 @@ game.HUD.ScoreItem = me.Renderable.extend({
      * update function
      */
     update : function () {  
-        console.log("type: " + this.type);
+        //console.log("type: " + this.type);
         if(this.type === 1) {
             if (this.score !== game.data.score) {
                 this.score = game.data.score;
